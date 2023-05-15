@@ -7,7 +7,7 @@ export const createType = async (type) => {
 }
 
 export const fetchTypes = async () => {
-    const {data} = await $host.get('api/type')
+    const {data} = await $host.get('types')
     return data
 }
 
@@ -26,10 +26,20 @@ export const createDevice = async (device) => {
     return data
 }
 
-export const fetchDevices = async (typeId, brandId, page, limit= 5) => {
-    const {data} = await $host.get('api/device', {params: {
-            typeId, brandId, page, limit
-        }})
+// export const fetchDevices = async (typeId, brandId, page, limit= 5) => {
+//     const {data} = await $host.get('api/device', {params: {
+//             typeId, brandId, page, limit
+//         }})
+//     return data
+// }
+
+export const fetchDevices = async () => {
+    const {data} = await $host.get('products')
+    return data
+}
+
+export const fetchDevicesByTypes = async (id) => {
+    const {data} = await $host.get('products/'+id)
     return data
 }
 
