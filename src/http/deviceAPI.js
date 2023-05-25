@@ -1,9 +1,18 @@
 import {$authHost, $host} from "./index";
 import jwt_decode from "jwt-decode";
 
+
 export const createType = async (type) => {
-    const {data} = await $authHost.post('api/type', type)
-    return data
+    const response = await fetch(`http://localhost:5000/types`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+            // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify(type)
+    });
+    const data = await response.json();
+    return data;
 }
 
 export const fetchTypes = async () => {
@@ -21,17 +30,34 @@ export const fetchBrands = async () => {
     return data
 }
 
-export const createDevice = async (device) => {
-    const {data} = await $authHost.post('api/device', device)
-    return data
+export const createDevice = async (params) => {
+
+    const response = await fetch(`http://localhost:5000/products`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: params
+    });
+    const data = await response.json();
+    return data;
 }
 
-// export const fetchDevices = async (typeId, brandId, page, limit= 5) => {
-//     const {data} = await $host.get('api/device', {params: {
-//             typeId, brandId, page, limit
-//         }})
-//     return data
-// }
+export const createCharacteristics = async (prod,name,value) => {
+    var prod_id =  Number(prod)
+
+    const response = await fetch(`http://localhost:5000/characteristics`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({prod_id,name,value})
+    });
+    const data = await response.json();
+    return data;
+}
+
 
 export const fetchDevices = async () => {
     const {data} = await $host.get('products')
@@ -44,6 +70,35 @@ export const fetchDevicesByTypes = async (id) => {
 }
 
 export const fetchOneDevice = async (id) => {
-    const {data} = await $host.get('api/device/' + id)
+    const {data} = await $host.get('products/id/' + id)
     return data
+}
+
+export const getCart = async () => {
+    const {data} = await $host.get('carts/'+ localStorage.getItem("login"))
+    return data
+}
+
+export const createCart = async (user_login,prod_id,quantity) => {
+    const response = await fetch(`http://localhost:5000/carts`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({user_login: localStorage.getItem("login"),prod_id:prod_id,quantity: quantity})
+    });
+    const data = await response.json();
+    return jwt_decode(data);
+}
+
+export const createOrder = async (cart_id,status,price) => {
+    const response = await fetch(`http://localhost:5000/orders`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({cart_id,status,price})
+    });
+    const data = await response.json();
+    return data;
 }

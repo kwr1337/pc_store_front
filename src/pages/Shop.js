@@ -16,7 +16,6 @@ const Shop = observer(() => {
     useEffect(() => {
         fetchTypes().then(data => device.setTypes(data))
         fetchDevices(null).then(data => {
-            console.log(data)
             device.setDevices(data)
         })
     }, [])

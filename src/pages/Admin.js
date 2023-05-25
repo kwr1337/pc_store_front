@@ -23,7 +23,7 @@ const Admin = () => {
                 className="mt-4 p-2"
                 onClick={() => setBrandVisible(true)}
             >
-                Добавить бренд
+                Добавить характеристику утройству
             </Button>
             <Button
                 variant={"outline-dark"}
