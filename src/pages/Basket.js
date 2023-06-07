@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Container, Dropdown} from "react-bootstrap";
-import {createOrder, createType, fetchDevices, fetchTypes, getCart} from "../http/deviceAPI";
+import {createOrder, createType, fetchDevices, fetchTypes, getCart, removeDeviceFromBasket} from "../http/deviceAPI";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import Image from "react-bootstrap/Image";
@@ -11,6 +11,7 @@ const Basket = observer(() => {
     const [price, setPrice] = React.useState();
     const [cardId, setCardId] = React.useState([]);
     const [status, setStatus] = React.useState("в обработке");
+    const [totalPrice, settotalPrice] = React.useState(0);
 
 
     useEffect(() => {
@@ -22,26 +23,59 @@ const Basket = observer(() => {
         })
     }, [])
 
-
-
-    function buy() {
+    function del() {
         var checkboxes = document.getElementsByClassName('checkbox');
-        var checkboxesChecked = []
+        var idCard = []
+        for (var index = 0; index < checkboxes.length; index++) {
+            if (checkboxes[index].checked) {
+                idCard.push(checkboxes[index].value);
+            }
+        }
+        removeDeviceFromBasket(idCard).then(r => {
+            console.log(r)
+        })
+        window.location.reload()
+        alert(`Товар успешно удален`);
+    }
+
+
+    function priceTotal() {
+        var checkboxes = document.getElementsByClassName('checkbox');
         var pricee = []
         for (var index = 0; index < checkboxes.length; index++) {
             if (checkboxes[index].checked) {
-                checkboxesChecked.push(checkboxes[index].value);
                 pricee.push(checkboxes[index].id)
                 var ad = 0
-                for (var i = 0; i < pricee.length; i++){
+                for (var i = 0; i < pricee.length; i++) {
                     ad += Number(pricee[i])
                 }
-
             }
-
         }
-        createOrder(checkboxesChecked, status, ad).then(r => console.log(r))
+        if (ad !== undefined){
+            settotalPrice(ad)
+        }
+        else {
+            settotalPrice(0)
+        }
+    }
 
+    function buy() {
+        var checkboxes = document.getElementsByClassName('checkbox');
+        var idCard = []
+        var pricee = []
+        for (var index = 0; index < checkboxes.length; index++) {
+            if (checkboxes[index].checked) {
+                idCard.push(checkboxes[index].value);
+                pricee.push(checkboxes[index].id)
+                var ad = 0
+                for (var i = 0; i < pricee.length; i++) {
+                    ad += Number(pricee[i])
+                }
+            }
+        }
+        createOrder(idCard, status, ad).then(r => console.log(r))
+        window.location.reload()
+        alert(`Ваш заказ успешно оплачен`);
     }
 
 
@@ -55,6 +89,7 @@ const Basket = observer(() => {
                     <th scope="col">Название</th>
                     <th scope="col">Кол-во</th>
                     <th scope="col">Цена</th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -69,8 +104,9 @@ const Basket = observer(() => {
                                         <input
                                             className={'checkbox'}
                                             type="checkbox"
-                                            value={item.id}
+                                            value={bas.id}
                                             id={bas.quantity * item.price}
+                                            onChange={priceTotal}
                                         >
                                         </input>
                                     </div>
@@ -79,6 +115,8 @@ const Basket = observer(() => {
                                     <td>{item.name}</td>
                                     <td>{bas.quantity}</td>
                                     <td className={"price"}>{bas.quantity * item.price}</td>
+                                    <td><Button className={"float-sm-right"} variant="outline-danger"
+                                                onClick={del}>Удалить</Button></td>
                                 </tr>
                                 :
                                 <noindex/>
@@ -87,8 +125,14 @@ const Basket = observer(() => {
                 )}
                 </tbody>
             </table>
-            <hr/>
-            <Button className={"float-sm-right"} variant="outline-success" onClick={buy}>Оплатить</Button>
+            <div className="buy">
+                <hr/>
+                <div className={"buy-body"}>
+                    <h5 style={{color:"white"}}>Общая цена: {totalPrice}</h5>
+                    <Button className={"float-sm-right"} variant="outline-success" onClick={buy}>Оплатить</Button>
+                </div>
+
+            </div>
         </Container>
     );
 });

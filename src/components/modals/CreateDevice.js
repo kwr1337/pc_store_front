@@ -31,7 +31,11 @@ const CreateDevice = observer(({show, onHide}) => {
         formData.append('description', description)
         formData.append('type_id', device.selectedType.id)
         // formData.append('info', JSON.stringify(info))
-        createDevice(formData).then(data => onHide())
+        createDevice(formData).then(data => {
+            onHide()
+            window.location.reload()
+            alert(`Продукт ${data.name} успешно добавлен`);
+        })
     }
 
     return (
@@ -48,7 +52,7 @@ const CreateDevice = observer(({show, onHide}) => {
             <Modal.Body>
                 <Form>
                     <Dropdown className="mt-2 mb-2">
-                        <Dropdown.Toggle>{device.selectedType.name || "Выберите тип"}</Dropdown.Toggle>
+                        <Dropdown.Toggle>{device.selectedType.value || "Выберите тип"}</Dropdown.Toggle>
                         <Dropdown.Menu>
                             {device.types.map(type =>
                                 <Dropdown.Item
@@ -60,34 +64,39 @@ const CreateDevice = observer(({show, onHide}) => {
                             )}
                         </Dropdown.Menu>
                     </Dropdown>
+                    Название:
                     <Form.Control
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        className="mt-3"
+                        className="mb-3"
                         placeholder="Введите название устройства"
                     />
+                    Описание:
                     <Form.Control
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                         className="mt-3"
                         placeholder="Введите описание устройства"
                     />
+                    Цена:
                     <Form.Control
                         value={price}
                         onChange={e => setPrice(Number(e.target.value))}
-                        className="mt-3"
+                        className="mb-3"
                         placeholder="Введите стоимость устройства"
                         type="number"
                     />
+                    Кол-во:
                     <Form.Control
                         value={quantity}
                         onChange={e => setQuantity(Number(e.target.value))}
-                        className="mt-3"
+                        className="mb-3"
                         placeholder="Введите кол-во устройства"
                         type="number"
                     />
+                    Картинка:
                     <Form.Control
-                        className="mt-3"
+                        className="mb-3"
                         type="file"
                         onChange={selectFile}
                     />

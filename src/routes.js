@@ -1,9 +1,19 @@
 import Admin from "./pages/Admin";
-import {ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "./utils/consts";
+import {
+    ADMIN_ROUTE,
+    BASKET_ROUTE, CONFIGURATOR_ROUTE,
+    DEVICE_ROUTE,
+    LOGIN_ROUTE,
+    ORDERS_ROUTE,
+    REGISTRATION_ROUTE,
+    SHOP_ROUTE
+} from "./utils/consts";
 import Basket from "./pages/Basket";
 import Shop from "./pages/Shop";
 import Auth from "./pages/Auth";
 import DevicePage from "./pages/DevicePage";
+import Orders from "./pages/Orders";
+import Configurator from "./pages/configurator";
 
 export const authRoutes = [
     {
@@ -13,6 +23,14 @@ export const authRoutes = [
     {
         path: BASKET_ROUTE,
         Component: Basket
+    },
+    {
+        path: ORDERS_ROUTE,
+        Component: Orders
+    },
+    {
+        path: CONFIGURATOR_ROUTE,
+        Component: Configurator
     },
 ]
 

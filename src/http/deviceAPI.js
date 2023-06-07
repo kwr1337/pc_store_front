@@ -43,6 +43,19 @@ export const createDevice = async (params) => {
     return data;
 }
 
+export const editDevice = async (params) => {
+
+    const response = await fetch(`http://localhost:5000/edit-product`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: params
+    });
+    const data = await response.json();
+    return data;
+}
+
 export const createCharacteristics = async (prod,name,value) => {
     var prod_id =  Number(prod)
 
@@ -79,13 +92,13 @@ export const getCart = async () => {
     return data
 }
 
-export const createCart = async (user_login,prod_id,quantity) => {
+export const createCart = async (prod_id,quantity) => {
     const response = await fetch(`http://localhost:5000/carts`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({user_login: localStorage.getItem("login"),prod_id:prod_id,quantity: quantity})
+        body: JSON.stringify({quantity: quantity,user_login: localStorage.getItem("login"),prod_id:prod_id})
     });
     const data = await response.json();
     return jwt_decode(data);
@@ -102,3 +115,26 @@ export const createOrder = async (cart_id,status,price) => {
     const data = await response.json();
     return data;
 }
+
+export const removeDevice = async (id) => {
+    const {data} = await $host.delete('products/id/'+id)
+    return data
+}
+
+export const removeDeviceFromBasket = async (id) => {
+    const {data} = await $host.delete('carts/id/'+id)
+    return data
+}
+
+export const fetchOrders = async () => {
+    const response = await fetch(`http://localhost:5000/orders`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({user_login:localStorage.getItem("login")})
+    });
+    const data = await response.json();
+    return data;
+}
+

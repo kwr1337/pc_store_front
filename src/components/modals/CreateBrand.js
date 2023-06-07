@@ -20,12 +20,20 @@ const CreateBrand = ({show, onHide}) => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [deviceId, setDeviceId] = useState("")
+    const [deviceName, setDeviceName] = useState("")
 
     const addBrand = () => {
         createCharacteristics(deviceId,name,description).then(data => {
             setValue('')
             onHide()
+            setDeviceName("")
+            window.location.reload()
+            alert(`Характеристика для  ${deviceName} успешно добавлен`);
         })
+    }
+    function seter (id,name){
+        setDeviceId(id)
+        setDeviceName(name)
     }
 
     useEffect(() => {
@@ -45,13 +53,14 @@ const CreateBrand = ({show, onHide}) => {
             </Modal.Header>
             <Modal.Body>
                 <Dropdown className="mt-2 mb-2">
-                    <Dropdown.Toggle>{device.name || "Выберите тип"}</Dropdown.Toggle>
+                    <Dropdown.Toggle>{deviceName|| "Выберите тип"}</Dropdown.Toggle>
                     <Dropdown.Menu>
                         {device.devices.map(devices =>
                             <Dropdown.Item
-                                onClick={e => setDeviceId(devices.id)}
+                                onClick={e => seter(devices.id,devices.name)}
                                 key={devices.id}
                             >
+
                                 {devices.name}
                             </Dropdown.Item>
                         )}
